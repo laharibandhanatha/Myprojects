@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            TODOList
+        </title>
+        <style>
+            body{
+                background-color: lightblue;
+                cursor: pointer;
+            }
+            button{
+                background-color:rgb(51, 218, 51);
+                text-align: center;
+                color:white;
+                width: 100px;
+                padding: 15px 15px;
+                font-weight: bold;
+                cursor:pointer;
+            }
+            p{
+                font-family: Arial, Helvetica, sans-serif;
+                font-weight: bold;
+            }
+            input{
+                padding: 15px 15px;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            .js-todocontainer{
+                display: grid;
+                grid-template-columns: 220px 173px 100px;
+            }
+
+        </style>
+    </head>
+    <body>
+        <h1 align="center">WELCOME TO TODOLIST</h1>
+        <input placeholder="Todo name" class="js-todo">
+        <input type="datetime-local" class="js-tododate" >
+        <button onclick="handleEvent(true)">ADD</button>
+        <div class="js-todocontainer"></div>
+        <script>
+            todoList=[];
+            window.onload=function (){
+                const savedList=JSON.parse(localStorage.getItem("todoList"));
+                if (savedList){
+                    todoList=savedList;
+                    handleEvent(false);
+                }
+            }
+            function handleEvent(addItem){
+                let todoHtml="";
+                if (addItem){
+                    let name=document.querySelector(".js-todo").value;
+                    let dueDate=document.querySelector(".js-tododate").value;
+                    if(name&&dueDate){
+                    todoList.push({name:name,dueDate:dueDate});
+                    }
+                    else{
+                       alert("Two fields are required");
+                    }
+
+                }
+                localStorage.setItem("todoList",JSON.stringify(todoList));
+                for(let i=0;i<todoList.length;i++){
+                    let todoitem=todoList[i]
+                    todoHtml+=`
+                    <div>${todoitem.name}</div>
+                    <div>${todoitem.dueDate}</div>     <button onclick="deleteTodo(${i})" class="js-delete">Delete</button> `;
+                   
+                    }
+                    let todo=document.querySelector(".js-todocontainer"); 
+                    todo.innerHTML=todoHtml
+                    document.querySelector(".js-todo").value = "";
+                    document.querySelector(".js-tododate").value = "";
+                } 
+                function  deleteTodo(index){
+                    todoList.splice(index, 1);
+                    localStorage.setItem("todoList",JSON.stringify(todoList));
+                    handleEvent(false);
+                }
+                  
+        </script>
+    </body>
+</html>
